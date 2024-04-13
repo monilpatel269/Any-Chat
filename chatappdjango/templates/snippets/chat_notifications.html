@@ -123,7 +123,6 @@
 		else if(current == "" || current == null || current == "undefined"){
 			element.innerHTML = timestamp
 		}
-		console.log("setChatNewestTimestamp: " + element.innerHTML)
 	}
 
 	/*
@@ -489,7 +488,6 @@
 	*/
 	function getNewChatNotifications(){
 		newestTimestamp = document.getElementById("id_chat_newest_timestamp").innerHTML
-		console.log("NEWEST TS: " + newestTimestamp)
 		if("{{request.user.is_authenticated}}"){
 			notificationSocket.send(JSON.stringify({
 				"command": "get_new_chat_notifications",

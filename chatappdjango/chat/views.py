@@ -78,7 +78,6 @@ def get_recent_chatroom_messages(user):
                     user=friend, room=room, timestamp=today, content=""
                 )
 
-            print("messageeeee", message)
             m_and_f.append({"message": message, "friend": friend})
 
     return sorted(m_and_f, key=lambda x: x["message"].timestamp, reverse=True)
@@ -92,7 +91,6 @@ def create_or_return_private_chat(request, *args, **kwargs):
             try:
                 user2 = Account.objects.get(id=user2_id)
                 chat = find_or_create_private_chat(user1, user2)
-                print("Successfully got the chat")
                 payload["response"] = "Successfully got the chat."
                 payload["chat_room_id"] = chat.id
             

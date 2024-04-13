@@ -333,8 +333,6 @@
 
 		// Is the friend request PENDING? (not answered yet)
 		if(notification['is_active'] == "True"){
-
-			//console.log("found an active friend request")
 			div1 = document.createElement("div")
 			div1.classList.add("d-flex", "flex-row", "align-items-start")
 			div1.id = assignGeneralDiv1Id(notification)
@@ -507,7 +505,6 @@
 		Called when pagination is exhausted and there is no more notifications.
 	*/
 	function setGeneralPaginationExhausted(){
-		console.log("general pagination exhausted.")
 		setGeneralPageNumber("-1")
 	}
 
@@ -658,7 +655,6 @@
 	*/
 	function startGeneralNotificationService(){
 		if("{{request.user.is_authenticated}}" == "True"){
-			console.log(GENERAL_NOTIFICATION_INTERVAL,"-=-=-=-=-=-=-=-=");
 			// setInterval(refreshGeneralNotifications, GENERAL_NOTIFICATION_INTERVAL)
 			// setInterval(getNewGeneralNotifications, GENERAL_NOTIFICATION_INTERVAL)
 			// setInterval(getUnreadGeneralNotificationsCount, GENERAL_NOTIFICATION_INTERVAL)

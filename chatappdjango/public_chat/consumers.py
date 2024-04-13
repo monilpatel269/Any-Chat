@@ -14,12 +14,10 @@ from chat.utils import calculate_timestamp
 
 class PublicChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
-        print("PublicChatConsumer: connect: " + str(self.scope["user"]))
         await self.accept()
         self.room_id = None
 
     async def disconnect(self, code):
-        print("PublicChatConsumer: disconnect")
         try:
             if self.room_id != None:
                 await self.leave_room(self.room_id)
@@ -28,7 +26,6 @@ class PublicChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def receive_json(self, content):
         command = content.get("command", None)
-        print("PublicChatConsumer: receive_json:" + str(command))
         try:
             if command == "send":
                 if len(content["message"].lstrip()) != 0:
@@ -60,7 +57,6 @@ class PublicChatConsumer(AsyncJsonWebsocketConsumer):
             await self.handle_client_error(e)
 
     async def send_room(self, room_id, message):
-        print("PublicChatConsumer: send_room")
         if self.room_id != None:
             if str(room_id) != str(self.room_id):
                 raise ClientError("ROOM_ACCESS_DENIED", "Room access denied.")
@@ -85,7 +81,6 @@ class PublicChatConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def chat_message(self, event):
-        print("PublicChatConsumer: chat_message from user #" + str(event["user_id"]))
         timestamp = calculate_timestamp(timezone.now())
         await self.send_json(
             {
@@ -99,7 +94,6 @@ class PublicChatConsumer(AsyncJsonWebsocketConsumer):
         )
     
     async def join_room(self, room_id):
-        print("PublicCHatConsumer: Join Room")
         is_auth = await is_authenticated(self.scope["user"])
         try:
             room = await get_room_or_error(room_id)
@@ -130,7 +124,6 @@ class PublicChatConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def leave_room(self, room_id):
-        print("PublicChatConsumer: Leave Room")
         is_auth = await is_authenticated(self.scope["user"])
         room = await get_room_or_error(room_id)
 
@@ -163,7 +156,6 @@ class PublicChatConsumer(AsyncJsonWebsocketConsumer):
         return
     
     async def send_message_payload(self, messages, new_page_number):
-        print("PublicChatConsumer: send_messages_payload.")
         await self.send_json(
             {
                 "message_payload": "message_payload",
@@ -173,7 +165,6 @@ class PublicChatConsumer(AsyncJsonWebsocketConsumer):
         )
     
     async def connected_user_count(self, event):
-        print("PubliChatCOnsumer: connected_user_count: count:" + str(event["connected_user_count"]))
         await self.send_json({
             "msg_type": MSG_TYPE_CONNECTED_USER_COUNT,
             "connected_user_count": event["connected_user_count"]
@@ -238,7 +229,6 @@ def get_room_chat_messages(room, page_number):
         return json.dumps(payload)
 
     except Exception as e:
-        print("EXCEPTION: " + str(e))
         return None
     
 class LazyRoomChatMessageEncoder(Serializer):

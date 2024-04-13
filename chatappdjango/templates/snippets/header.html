@@ -124,16 +124,11 @@
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
     // var ws_path = ws_scheme + '://' + window.location.host + ":8001/"; // PRODUCTION
     var ws_path = ws_scheme + '://' + window.location.host + "/";
-    // console.log("Connecting to " + ws_path);
-    console.log("ws_pathhhhhhh", ws_path);
     var notificationSocket = new WebSocket(ws_path);
 
     // Handle incoming messages
     notificationSocket.onmessage = function (message) {
         var data = JSON.parse(message.data);
-        console.log("Got notification websocket message. " + data.general_msg_type);
-        console.log("Got notification websocket message. " + data.chat_msg_type);
-
         /*
             GENERAL NOTIFICATIONS
         */
@@ -189,7 +184,6 @@
     };
 
     notificationSocket.onopen = function (e) {
-        console.log("Notification Socket on open: " + e)
         setupGeneralNotificationsMenu()
         getFirstGeneralNotificationsPage()
         getUnreadGeneralNotificationsCount()
@@ -203,10 +197,10 @@
     }
 
     if (notificationSocket.readyState == WebSocket.OPEN) {
-        console.log("Notification Socket OPEN complete.")
+        // console.log("Notification Socket OPEN complete.")
     }
     else if (notificationSocket.readyState == WebSocket.CONNECTING) {
-        console.log("Notification Socket connecting..")
+        // console.log("Notification Socket connecting..")
     }
 </script>
 
@@ -215,7 +209,6 @@
 
 
     function executeQuery() {
-        console.log("INNNNNNNN22222222");
         var query = ""
         query = document.getElementById('id_q_small').value;
         if (query == "") {

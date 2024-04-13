@@ -17,16 +17,13 @@ from chat.exceptions import ClientError
 
 class NotificationConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
-        print("Coennting.....")
         await self. accept()
 
     async def disconnect(self, code):
-        print("NotificationConsumer: disconnect")
-        # self.disconnect()
+        self.disconnect()
     
     async def receive_json(self, content, **kwargs):
         command = content.get("command", None)
-        print("NotificationConsumer: receive_json. Command: " + command)
         try:
             if command == "get_general_notifications":
                 payload = await get_general_notifications(self.scope["user"], content.get("page_number", None))
@@ -91,14 +88,11 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
                         payload = json.loads(payload)
                         await self.send_unread_chat_notification_count(payload['count'])
                 except Exception as e:
-                    print("UNREAD CHAT MESSAGE COUNT EXCEPTION: " + str(e))
                     pass
         except ClientError as e:
-            print("EXCEPTION: receive_json: " + str(e))
             pass
     
     async def display_progress_bar(self, shouldDisplay):
-        print("NotificationConsumer: display_progress_bar: " + str(shouldDisplay))
         await self.send_json({
             "progress_bar": shouldDisplay,
         },)
@@ -164,7 +158,6 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         )
     
     async def chat_pagination_exhausted(self):
-        print("Chat Pagination DONE... No more notifications.")
         await self.send_json(
             {
                 "chat_msg_type": CHAT_MSG_TYPE_PAGINATION_EXHAUSTED,
@@ -314,7 +307,6 @@ def get_chat_notifications(user, page_number):
         notifications = Notification.objects.filter(target=user, content_type=chatmessage_ct).order_by("-timestamp")
         p = Paginator(notifications, DEFAULT_NOTIFICATION_PAGE_SIZE)
 
-        print("PAGES: " + str(p.num_pages))
         payload = {}
         if len(notifications) > 0:
             if int(page_number) <= p.num_pages:

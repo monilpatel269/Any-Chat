@@ -18,15 +18,12 @@ from account.models import Account
 class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):
-        print("ChatConsumer: connect: " + str(self.scope["user"]))
 
         await self.accept()
         self.room_id = None
 
     async def receive_json(self, content):
-        print("ChatConsumer: receive_json")
         command = content.get("command", None)
-        print("commanddddddddd", command)
         try:
             if command == "join":
                 await self.join_room(content["room"])
@@ -136,13 +133,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def send_room(self, room_id, message):
-        print(self.room_id,"ChatCOsumer: send_room",room_id)
         if self.room_id != None:
             if str(room_id) != str(self.room_id):
-                print("CLIENT ERROR 1")
                 raise ClientError("ROOM_ACCESS_DENIED", "Room access denied")
         else:
-            print("CLEINT ERROR 2")
             raise ClientError("ROOM_ACCESS_DENIED", "Room access denied")
 
         room = await get_room_or_error(room_id, self.scope["user"])
@@ -172,7 +166,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def chat_join(self, event):
-        print("CHatConsumer: chat_join: " + str(self.scope["user"].id))
         if event["username"]:
             await self.send_json(
                 {
@@ -186,7 +179,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             )
 
     async def chat_leave(self, event):
-        print("ChatConsumer: chat_leave")
         if event["username"]:
             await self.send_json(
                 {
@@ -200,7 +192,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             )
 
     async def chat_message(self, event):
-        print("ChatConsumer: chat_message")
         timestamp = calculate_timestamp(timezone.now())
 
         await self.send_json(
@@ -218,7 +209,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         """
         Send a payload of messages to the ui
         """
-        print("ChatConsumer: send_messages_payload. ")
 
         await self.send_json(
             {
@@ -262,8 +252,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
 @database_sync_to_async
 def get_room_or_error(room_id,user):
-    print("user22222222222", user)
-    print("room_iddddddd", room_id)
     try:
         room = PrivateChatRoom.objects.get(id=room_id)
     except PrivateChatRoom.DoesNotExist:
@@ -318,7 +306,6 @@ def get_room_chat_messages(room, page_number):
         return json.dumps(payload)
 
     except Exception as e:
-        print("EXCEPTION: " + str(e))
     
     return None
 

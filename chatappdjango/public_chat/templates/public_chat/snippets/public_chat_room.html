@@ -110,12 +110,12 @@ PUBLIC CHAT
 	} else {
 		var ws_path = ws_scheme + '://' + window.location.host + ":8001/public_chat/{{room_id}}/"; // production
 	}
-	console.log("ws_path", ws_path);
+	// console.log("ws_path", ws_path);
 	var public_chat_socket = new WebSocket(ws_path);
 
 	// Handle incoming messages
 	public_chat_socket.onmessage = function(message) {
-		// console.log("Got chat websocket message " + message.data);
+		console.log("Got chat websocket message " + message.data);
 		var data = JSON.parse(message.data);
 
 		// display the progress bar?
@@ -129,7 +129,7 @@ PUBLIC CHAT
 		}
 		// Handle joining (Client perspective)
 		if (data.join) {
-			console.log("Joining public room " + data.join);
+			// console.log("Joining public room " + data.join);
 			getRoomChatMessages()
 		}
 
@@ -148,7 +148,7 @@ PUBLIC CHAT
 	};
 
 	public_chat_socket.addEventListener("open", function(e){
-	console.log("Public Public ChatSocket OPEN")
+	// console.log("Public Public ChatSocket OPEN")
 		// join chat room
 		if("{{request.user.is_authenticated}}"){
 			public_chat_socket.send(JSON.stringify({
@@ -163,24 +163,24 @@ PUBLIC CHAT
 	};
 
 	public_chat_socket.onOpen = function(e){
-		console.log("Public ChatSocket onOpen", e)
+		// console.log("Public ChatSocket onOpen", e)
 	}
 
 	public_chat_socket.onerror = function(e){
-        console.log('Public ChatSocket error', e)
+        // console.log('Public ChatSocket error', e)
     }
 
     if (public_chat_socket.readyState == WebSocket.OPEN) {
-    	console.log("Public ChatSocket OPEN")
+    	// console.log("Public ChatSocket OPEN")
     } else if (public_chat_socket.readyState == WebSocket.CONNECTING){
-        console.log("Public ChatSocket connecting..")
+        // console.log("Public ChatSocket connecting..")
     }
 
 	document.getElementById('id_chat_message_input').focus();
 	document.getElementById('id_chat_message_input').onkeyup = function(e) {
 		if (e.keyCode === 13 && e.shiftKey) {  // enter + return
 			// Handled automatically by textarea
-			console.log("INNNNNNNNN--------");
+			// console.log("INNNNNNNNN--------");
 		}
 		else if(e.keyCode === 13 && !e.shiftKey){ // enter + !return
 			document.getElementById('id_chat_message_submit').click();

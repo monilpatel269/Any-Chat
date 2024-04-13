@@ -12,7 +12,6 @@
 			data: payload,
 			timeout: 5000,
 			success: function(data) {
-				console.log("SUCCESS", data)
 				if(data['response'] == "Successfully got the chat."){
 					chatroomId = data['chat_room_id']
 					OnGetOrCreateChatroomSuccess(chatroomId)
